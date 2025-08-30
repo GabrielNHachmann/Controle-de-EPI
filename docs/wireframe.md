@@ -1,0 +1,1 @@
+https://www.figma.com/design/KRcSg6ZAvwqFLNNsHvj1c4/Controle-de-EPIs?node-id=2-8585&t=1OKKoLXX9U1GlUkR-1
