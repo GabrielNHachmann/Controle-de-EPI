@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Colaboradores</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        /* Estilos do Menu Lateral */
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            padding: 2rem 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0.2rem 0 1rem rgba(0, 0, 0, 0.15);
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 0.5rem;
+        }
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: #495057;
+        }
+
+        /* Ajuste do conteúdo principal */
+        .content {
+            margin-left: 250px;
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+    <!-- Menu Lateral -->
+    <div class="sidebar">
+        <h4 class="text-center mb-5">Menu</h4>
+        <div class="list-group list-group-flush">
+            <button class="list-group-item list-group-item-action bg-transparent text-white border-0 py-2 rounded-3 nav-link active" id="cadastro-tab" data-bs-toggle="tab" data-bs-target="#cadastro" type="button" role="tab" aria-controls="cadastro" aria-selected="true">
+                Cadastro
+            </button>
+            <button class="list-group-item list-group-item-action bg-transparent text-white border-0 py-2 rounded-3 nav-link" id="relatorio-tab" data-bs-toggle="tab" data-bs-target="#relatorio" type="button" role="tab" aria-controls="relatorio" aria-selected="false">
+                Relatórios
+            </button>
+
+            <a href="{% url 'base' %}" button id="btn-show-voltar" class="flex items-center space-x-2 px-4 py-3 rounded-lg font-semibold transition-colors duration-200 hover:bg-gray-700 focus:outline-none">
+            
+                <span>Voltar</span>
+            </a>
+        </div>
+
+        
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="content flex-grow-1">
+        <div class="card p-4">
+            <h1 class="text-center mb-4">Gestão de Colaboradores e Equipamentos</h1>
+            <div class="tab-content" id="myTabContent">
+                <!-- Tab de Cadastro -->
+                <div class="tab-pane fade show active" id="cadastro" role="tabpanel" aria-labelledby="cadastro-tab">
+                    <h2 class="mb-3">Cadastrar Novo Colaborador</h2>
+                    <div id="cadastro-alert" class="alert d-none" role="alert"></div>
+
+                    <form id="cadastroForm">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome Completo</label>
+                            <input type="text" class="form-control rounded-3" id="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cargo" class="form-label">Cargo</label>
+                            <input type="text" class="form-control rounded-3" id="cargo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control rounded-3" id="email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-2 rounded-3">Cadastrar Colaborador</button>
+                    </form>
+                </div>
+
+                <!-- Tab de Relatórios -->
+                <div class="tab-pane fade" id="relatorio" role="tabpanel" aria-labelledby="relatorio-tab">
+                    <h2 class="mb-3">Relatórios de Empréstimos</h2>
+                    <form id="relatorioForm">
+                        <div class="mb-3">
+                            <label for="nomeBusca" class="form-label">Buscar por Nome do Colaborador</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control rounded-3" id="nomeBusca" placeholder="Ex: João Silva">
+                                <button class="btn btn-primary rounded-3 ms-2" type="submit">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="relatorio-alert" class="alert alert-info d-none mt-3" role="alert"></div>
+                    <div id="relatorio-resultados" class="mt-4">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th scope="col">Colaborador</th>
+                                    <th scope="col">Equipamento</th>
+                                    <th scope="col">Data do Empréstimo</th>
+                                    <th scope="col">Previsão de Devolução</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="relatorio-tabela-corpo">
+                                <tr><td colspan="5" class="text-center text-muted">Nenhum resultado para exibir.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cadastroForm = document.getElementById('cadastroForm');
+        const relatorioForm = document.getElementById('relatorioForm');
+        const cadastroAlert = document.getElementById('cadastro-alert');
+        const relatorioAlert = document.getElementById('relatorio-alert');
+        const relatorioTabelaCorpo = document.getElementById('relatorio-tabela-corpo');
+
+        // Dados fictícios para simular empréstimos
+        const equipamentosEmprestados = [
+            { nome: 'Gabriel Hachmann', equipamento: 'Notebook Dell', dataEmprestimo: '2023-10-01', previsaoDevolucao: '2023-11-01', status: 'Ativo' },
+            { nome: 'Mariele Silva', equipamento: 'Monitor Philips', dataEmprestimo: '2023-09-20', previsaoDevolucao: '2023-10-20', status: 'Ativo' },
+            { nome: 'Bruno Branco', equipamento: 'Mouse sem Fio', dataEmprestimo: '2023-08-15', previsaoDevolucao: '2023-09-15', status: 'Devolvido' },
+            { nome: 'Graziela Ramos', equipamento: 'Teclado Mecânico', dataEmprestimo: '2023-10-05', previsaoDevolucao: '2023-11-05', status: 'Ativo' },
+            { nome: 'Nicolas Jesus', equipamento: 'Projetor Epson', dataEmprestimo: '2023-07-25', previsaoDevolucao: '2023-08-25', status: 'Devolvido' }
+        ];
+
+        // Função para exibir mensagem de feedback
+        function showAlert(alertElement, message, type) {
+            alertElement.textContent = message;
+            alertElement.className = `alert alert-${type} d-block`;
+            setTimeout(() => {
+                alertElement.classList.add('d-none');
+            }, 5000);
+        }
+
+        // Lidar com o envio do formulário de cadastro
+        cadastroForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Evita o recarregamento da página
+
+            const nome = document.getElementById('nome').value;
+            const cargo = document.getElementById('cargo').value;
+            const email = document.getElementById('email').value;
+
+            // Simula o sucesso ou falha do cadastro
+            const isSuccess = Math.random() > 0.1; // 90% de chance de sucesso
+            
+            if (isSuccess) {
+                showAlert(cadastroAlert, `Colaborador "${nome}" cadastrado com sucesso!`, 'success');
+                cadastroForm.reset(); // Limpa o formulário
+            } else {
+                showAlert(cadastroAlert, `Falha ao cadastrar o colaborador "${nome}". Tente novamente.`, 'danger');
+            }
+        });
+
+        // Lidar com o envio do formulário de relatório
+        relatorioForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Evita o recarregamento da página
+
+            const nomeBusca = document.getElementById('nomeBusca').value.trim().toLowerCase();
+            const resultados = equipamentosEmprestados.filter(item => 
+                item.nome.toLowerCase().includes(nomeBusca)
+            );
+
+            relatorioTabelaCorpo.innerHTML = '';
+            
+            if (resultados.length > 0) {
+                relatorioAlert.classList.add('d-none');
+                resultados.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.nome}</td>
+                        <td>${item.equipamento}</td>
+                        <td>${item.dataEmprestimo}</td>
+                        <td>${item.previsaoDevolucao}</td>
+                        <td><span class="badge rounded-pill bg-${item.status === 'Ativo' ? 'success' : 'secondary'}">${item.status}</span></td>
+                    `;
+                    relatorioTabelaCorpo.appendChild(row);
+                });
+            } else {
+                showAlert(relatorioAlert, `Nenhum empréstimo encontrado para "${nomeBusca}".`, 'warning');
+                relatorioTabelaCorpo.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum resultado para exibir.</td></tr>`;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
