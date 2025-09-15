@@ -1,0 +1,77 @@
+
+
+    <!-- Botão pequeno no canto superior direito para abrir a barra lateral -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="open-sidebar-btn" class="bg-blue-600 text-white p-2 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <!-- Ícone de menu SVG -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Conteúdo principal, agora sem o título no meio da tela -->
+
+    <!-- Barra lateral (inicialmente oculta fora da tela) -->
+    <aside id="sidebar" class="fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-500 ease-in-out">
+        
+        <!-- Cabeçalho da barra lateral com botão de fechar -->
+        <div class="flex justify-end p-4">
+            <button id="close-sidebar-btn" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Conteúdo da barra lateral: botões de navegação -->
+        <div class="flex flex-col p-4 space-y-4 mt-8">
+            <a href="{% url 'home' %}" target="_blank" class="w-full text-center bg-gray-200 text-gray-800 font-medium py-3 rounded-xl hover:bg-gray-300 transition duration-300">
+                Tela Inicial
+            </a>
+            <a href="{% url 'colaboradores' %}" target="_blank" class="w-full text-center bg-gray-200 text-gray-800 font-medium py-3 rounded-xl hover:bg-gray-300 transition duration-300">
+                Cadastro de Colaboradores
+            </a>
+            <a href="{% url 'equipamentos' %}" target="_blank" class="w-full text-center bg-gray-200 text-gray-800 font-medium py-3 rounded-xl hover:bg-gray-300 transition duration-300">
+                Cadastro de Equipamentos
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- Overlay de fundo (para escurecer o resto da tela) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <script>
+        // Seleciona os elementos do DOM
+        const openBtn = document.getElementById('open-sidebar-btn');
+        const closeBtn = document.getElementById('close-sidebar-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        // Função para abrir a barra lateral
+        function openSidebar() {
+            sidebar.classList.remove('translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            overlay.classList.remove('hidden');
+        }
+
+        // Função para fechar a barra lateral
+        function closeSidebar() {
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        // Adiciona os event listeners aos botões
+        openBtn.addEventListener('click', openSidebar);
+        closeBtn.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        // Adiciona um listener para o evento 'keydown' (tecla pressionada)
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeSidebar();
+            }
+        });
+    </script>

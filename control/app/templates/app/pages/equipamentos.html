@@ -1,0 +1,260 @@
+{% include 'app/partials/doctype.html' %}
+<body class="bg-gray-100 p-8">
+    {% include 'app/partials/header.html' %}
+    <!-- Mensagem de feedback (sucesso/falha) -->
+    <div id="feedback-message" class="hidden fixed top-5 left-1/2 transform -translate-x-1/2 z-50 p-4 rounded-lg text-white shadow-lg transition-all duration-300 ease-out"></div>
+
+    <!-- Container principal da aplicação -->
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Gerenciamento de Equipamentos</h1>
+            <button id="show-add-form" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                Novo Equipamento
+            </button>
+        </div>
+
+        <!-- Tela de Cadastro/Edição de Equipamentos -->
+        <div id="add-edit-container" class="hidden fade-in bg-gray-50 p-6 rounded-lg mb-8 shadow-sm">
+            <h2 id="form-title" class="text-2xl font-semibold text-gray-700 mb-4">Cadastrar Equipamento</h2>
+            <form id="equipment-form" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Nome do Equipamento</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label for="model" class="block text-sm font-medium text-gray-700">Modelo</label>
+                    <input type="text" id="model" name="model" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label for="serial" class="block text-sm font-medium text-gray-700">Número de Série</label>
+                    <input type="text" id="serial" name="serial" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="flex space-x-4">
+                    <button type="submit" id="submit-button" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                        Cadastrar
+                    </button>
+                    <button type="button" id="cancel-button" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tela de Listagem de Equipamentos -->
+        <div id="list-container" class="fade-in bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Equipamentos Cadastrados</h2>
+            <div id="equipment-list" class="space-y-4">
+                <!-- A lista de equipamentos será renderizada aqui via JavaScript -->
+            </div>
+            <p id="no-equipments-message" class="text-center text-gray-500 italic mt-8">Nenhum equipamento cadastrado ainda.</p>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="delete-modal" class="modal hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg p-6 w-full max-w-sm shadow-xl">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                </div>
+                <h3 class="mt-4 text-lg leading-6 font-medium text-gray-900">Confirmar Exclusão</h3>
+                <div class="mt-2">
+                    <p class="text-sm text-gray-500">Tem certeza de que deseja excluir o equipamento <span id="equipment-name-to-delete" class="font-semibold text-gray-800"></span>?</p>
+                </div>
+            </div>
+            <div class="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse space-y-3 sm:space-y-0 sm:space-x-3 sm:space-x-reverse">
+                <button type="button" id="confirm-delete-button" class="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none transition-transform transform hover:scale-105">
+                    Excluir
+                </button>
+                <button type="button" id="cancel-delete-button" class="w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none transition-transform transform hover:scale-105">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const addEditContainer = document.getElementById('add-edit-container');
+            const listContainer = document.getElementById('list-container');
+            const equipmentForm = document.getElementById('equipment-form');
+            const equipmentList = document.getElementById('equipment-list');
+            const showAddFormButton = document.getElementById('show-add-form');
+            const cancelFormButton = document.getElementById('cancel-button');
+            const formTitle = document.getElementById('form-title');
+            const submitButton = document.getElementById('submit-button');
+            const feedbackMessage = document.getElementById('feedback-message');
+            const deleteModal = document.getElementById('delete-modal');
+            const confirmDeleteButton = document.getElementById('confirm-delete-button');
+            const cancelDeleteButton = document.getElementById('cancel-delete-button');
+            const equipmentNameToDelete = document.getElementById('equipment-name-to-delete');
+            const noEquipmentsMessage = document.getElementById('no-equipments-message');
+
+            let editingId = null;
+            let equipmentToDeleteId = null;
+
+            // Simula um banco de dados local com um array
+            let equipments = JSON.parse(localStorage.getItem('equipments')) || [];
+
+            function renderEquipments() {
+                equipmentList.innerHTML = '';
+                if (equipments.length === 0) {
+                    noEquipmentsMessage.classList.remove('hidden');
+                } else {
+                    noEquipmentsMessage.classList.add('hidden');
+                    equipments.forEach(equipment => {
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center justify-between p-4 bg-white rounded-lg shadow-sm border border-gray-200';
+                        div.innerHTML = `
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">${equipment.name}</h3>
+                                <p class="text-sm text-gray-500">Modelo: ${equipment.model} | Série: ${equipment.serial}</p>
+                            </div>
+                            <div class="space-x-2">
+                                <button data-id="${equipment.id}" class="edit-btn text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button data-id="${equipment.id}" class="delete-btn text-red-500 hover:text-red-700 transition-colors duration-200">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        `;
+                        equipmentList.appendChild(div);
+                    });
+                }
+            }
+
+            function showFeedback(message, type) {
+                feedbackMessage.textContent = message;
+                feedbackMessage.classList.remove('hidden');
+                
+                // Remove classes de cor anteriores
+                feedbackMessage.classList.remove('bg-green-500', 'bg-red-500');
+                
+                if (type === 'success') {
+                    feedbackMessage.classList.add('bg-green-500');
+                } else if (type === 'error') {
+                    feedbackMessage.classList.add('bg-red-500');
+                }
+
+                setTimeout(() => {
+                    feedbackMessage.classList.add('hidden');
+                }, 3000);
+            }
+
+            function resetForm() {
+                equipmentForm.reset();
+                editingId = null;
+                formTitle.textContent = 'Cadastrar Equipamento';
+                submitButton.textContent = 'Cadastrar';
+                submitButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                submitButton.classList.add('bg-green-600', 'hover:bg-green-700');
+            }
+
+            function showAddEditForm() {
+                addEditContainer.classList.remove('hidden');
+                listContainer.classList.add('hidden');
+            }
+
+            function showList() {
+                addEditContainer.classList.add('hidden');
+                listContainer.classList.remove('hidden');
+                resetForm();
+            }
+
+            // Exibir a lista inicialmente
+            renderEquipments();
+
+            showAddFormButton.addEventListener('click', showAddEditForm);
+            cancelFormButton.addEventListener('click', showList);
+
+            equipmentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value.trim();
+                const model = document.getElementById('model').value.trim();
+                const serial = document.getElementById('serial').value.trim();
+
+                if (!name || !model || !serial) {
+                    showFeedback('Por favor, preencha todos os campos.', 'error');
+                    return;
+                }
+
+                if (editingId) {
+                    // Lógica de Edição
+                    const equipmentIndex = equipments.findIndex(eq => eq.id === editingId);
+                    if (equipmentIndex !== -1) {
+                        equipments[equipmentIndex] = { ...equipments[equipmentIndex], name, model, serial };
+                        showFeedback('Equipamento atualizado com sucesso!', 'success');
+                    } else {
+                        showFeedback('Erro: Equipamento não encontrado para edição.', 'error');
+                    }
+                } else {
+                    // Lógica de Cadastro
+                    const newEquipment = {
+                        id: Date.now().toString(), // ID único
+                        name,
+                        model,
+                        serial
+                    };
+                    equipments.push(newEquipment);
+                    showFeedback('Equipamento cadastrado com sucesso!', 'success');
+                }
+
+                localStorage.setItem('equipments', JSON.stringify(equipments));
+                renderEquipments();
+                resetForm(); // Permanecer na tela de cadastro, mas com o formulário limpo
+            });
+
+            equipmentList.addEventListener('click', (e) => {
+                if (e.target.closest('.edit-btn')) {
+                    const id = e.target.closest('.edit-btn').dataset.id;
+                    const equipment = equipments.find(eq => eq.id === id);
+                    if (equipment) {
+                        editingId = id;
+                        formTitle.textContent = 'Editar Equipamento';
+                        submitButton.textContent = 'Atualizar';
+                        submitButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                        submitButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                        
+                        document.getElementById('name').value = equipment.name;
+                        document.getElementById('model').value = equipment.model;
+                        document.getElementById('serial').value = equipment.serial;
+                        
+                        showAddEditForm();
+                    } else {
+                        showFeedback('Equipamento não encontrado para edição.', 'error');
+                    }
+                } else if (e.target.closest('.delete-btn')) {
+                    const id = e.target.closest('.delete-btn').dataset.id;
+                    const equipment = equipments.find(eq => eq.id === id);
+                    if (equipment) {
+                        equipmentToDeleteId = id;
+                        equipmentNameToDelete.textContent = equipment.name;
+                        deleteModal.classList.remove('hidden');
+                    }
+                }
+            });
+
+            confirmDeleteButton.addEventListener('click', () => {
+                equipments = equipments.filter(eq => eq.id !== equipmentToDeleteId);
+                localStorage.setItem('equipments', JSON.stringify(equipments));
+                renderEquipments();
+                deleteModal.classList.add('hidden');
+                showFeedback('Equipamento excluído com sucesso!', 'success');
+            });
+
+            cancelDeleteButton.addEventListener('click', () => {
+                deleteModal.classList.add('hidden');
+            });
+
+            // Fechar modal ao clicar fora dele
+            deleteModal.addEventListener('click', (e) => {
+                if (e.target === deleteModal) {
+                    deleteModal.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
