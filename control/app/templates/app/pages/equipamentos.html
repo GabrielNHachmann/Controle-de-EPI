@@ -4,10 +4,7 @@
 
 <body>
 
-  <!--
-    ESTE CÓDIGO INCLUI PARTES REUTILIZÁVEIS, COMO O CABEÇALHO. NÃO DEVE SER ALTERADO.
-    A tag `{% include 'core/partials/header.html' %}` insere o conteúdo do arquivo 'header.html' aqui, mantendo a consistência do site.
-  -->
+
   {% include 'app/partials/header.html' %}
 
   <main class="container py-5">
@@ -18,26 +15,15 @@
           <div class="card-body p-4">
             <h2 class="card-title text-center mb-4">Cadastrar Novo Equipamento</h2>
             <hr>
-            <!-- 
-              ESTA TAG FORM ENVIA DADOS PARA O SERVIDOR. NÃO ALTERE AS PROPRIEDADES `action` OU `method`.
-              A tag `{% url 'criar_equipamento' %}` gera a URL correta para o processo de criação de um equipamento.
-            -->
+            
             <form action="{% url 'criar_equipamento' %}" method="POST" class="mb-3">
-              <!-- 
-                ESTA TAG É O TOKEN DE SEGURANÇA DO DJANGO. NÃO PODE SER ALTERADA.
-                O `{% csrf_token %}` é essencial para a segurança de formulários, protegendo contra ataques de falsificação de solicitação entre sites (CSRF).
-              -->
+              
               {% csrf_token %}
 
-              <!-- 
-                ESTE LOOP PERCORRE AUTOMATICAMENTE OS CAMPOS DO FORMULÁRIO. NÃO ALTERE ESTE BLOCO.
-                A tag `{% for field in form %}` itera sobre cada campo do formulário (definido no backend), gerando o HTML necessário para cada um.
-              -->
+              
               {% for field in form %}
                 <div class="mb-3">
-                  <!-- A variável `{{ field.label }}` exibe o rótulo do campo. -->
                   <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                  <!-- A variável `{{ field }}` renderiza o campo de entrada completo (input, select, etc.). -->
                   {{ field }}
                 </div>
               {% endfor %}
@@ -54,13 +40,11 @@
     </div>
 
     <div class="row justify-content-center">
-      <!-- Seção da Tabela de Equipamentos -->
       <div class="col-12">
         <div class="card shadow-lg">
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="card-title mb-0">Lista de Equipamentos</h2>
-              <!-- A TAG ACTION DO FORMULÁRIO DE PESQUISA É ESSENCIAL PARA O FUNCIONAMENTO DA BUSCA. NÃO ALTERE. -->
               <form action="" class="search-form d-flex w-50 ms-auto">
                 <input type="search" class="form-control me-2" name="search" placeholder="Pesquisar por nome...">
                 <button type="submit" class="btn btn-outline-secondary rounded-circle">
@@ -82,19 +66,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- ESTE LOOP CARREGA OS DADOS DA LISTA DE EQUIPAMENTOS. É UMA PARTE CRUCIAL. -->
-                  <!-- O `{% for i in equipamentos %}` itera sobre a lista de equipamentos que foi enviada pelo backend. -->
                   {% for i in equipamentos %}
                   <tr>
-                    <!-- As variáveis `{{ i.nome }}`, `{{ i.tipo }}`, etc., exibem os dados de cada equipamento. -->
                     <td>{{ i.nome }}</td>
                     <td>{{ i.tipo }}</td>
                     <td>{{ i.codigo }}</td>
                     <td>{{ i.validade|date:"d/m/Y" }}</td>
                     <td>{{ i.estoque }}</td>
                     <td class="text-center">
-                      <!-- ESTES BOTÕES USAM URLS DE EDIÇÃO E EXCLUSÃO. NÃO ALTERE AS TAGS `HREF` OU `DATA-BS-TARGET`. -->
-                      <!-- O `{% url '...' %}` é usado para criar os links para as páginas de edição e exclusão. -->
                       <a href="{% url 'editar_equipamento' i.id %}" class="btn btn-warning btn-sm me-1">
                         <i class="fas fa-edit"></i>
                       </a>
@@ -103,7 +82,6 @@
                       </button>
                     </td>
                   </tr>
-                  <!-- Modal de Exclusão -->
                   <div class="modal fade" id="confirmDelete{{ i.id }}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content border-0 shadow-lg">
@@ -122,8 +100,6 @@
                       </div>
                     </div>
                   </div>
-                  <!-- A TAG EMPTY É MOSTRADA QUANDO NÃO HÁ EQUIPAMENTOS. NÃO ALTERE. -->
-                  <!-- O `{% empty %}` é uma condição que é ativada se a lista de `equipamentos` estiver vazia. -->
                   <tr>
                     <td colspan="6" class="text-center text-muted">Nenhum equipamento encontrado.</td>
                   </tr>
@@ -137,7 +113,6 @@
     </div>
   </main>
 
-  <!-- ESTE CÓDIGO INCLUI PARTES REUTILIZÁVEIS, COMO O RODAPÉ. NÃO DEVE SER ALTERADO. -->
   {% include 'core/partials/footer.html' %}
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
