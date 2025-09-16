@@ -36,3 +36,142 @@ equip {
             from { opacity: 0; }
             to { opacity: 1; }
     }
+
+gerenciar {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+ body{
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #555;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .actions-td {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .edit-btn, .delete-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+        .edit-btn {
+            background-color: #2196F3;
+        }
+        .edit-btn:hover {
+            background-color: #0b7dda;
+            transform: translateY(-2px);
+        }
+        .delete-btn {
+            background-color: #f44336;
+        }
+        .delete-btn:hover {
+            background-color: #da3328;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos do Modal de Confirmação */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Escondido por padrão */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .modal-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        #confirm-delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        #confirm-delete-btn:hover {
+            background-color: #da3328;
+        }
+        #cancel-delete-btn {
+            background-color: #ddd;
+            color: #333;
+        }
+        #cancel-delete-btn:hover {
+            background-color: #ccc;
+        }
+body {
+            font-family: 'Inter', sans-serif;
+        }

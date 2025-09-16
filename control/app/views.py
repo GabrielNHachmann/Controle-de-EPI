@@ -15,6 +15,8 @@ def equipamentos(request):
     return render(request, 'app/pages/equipamentos.html')
 
 
+
+
 def criar_colaborador(request):
     if request.method == 'GET':
         colaboradores = Colaborador.objects.all()
@@ -97,4 +99,3 @@ def deletar_equipamento(request, id):
     equipamento = get_object_or_404(Equipamento, id=id)
     equipamento.delete()
     return redirect('criar_equipamento')
-
