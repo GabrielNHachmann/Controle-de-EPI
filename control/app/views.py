@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Equipamento
 from .models import Colaborador
+from .models import Emprestimo
 from .form import EquipamentoForm
+from .form import EmprestimoForm
 
 
 # Create your views here.
@@ -14,6 +16,13 @@ def colaboradores(request):
 def equipamentos(request):
     return render(request, 'app/pages/equipamentos.html')
 
+def relatorio(request):
+    return render(request, 'app/pages/relatorio.html')
+
+def emprestimo(request):
+    return render(request, 'app/pages/emprestimo.html')
+
+
 
 
 
@@ -25,7 +34,7 @@ def criar_colaborador(request):
         nome = request.POST.get('nome')
         email = request.POST.get('email')
         telefone = request.POST.get('telefone')
-        status = request.POST.get('status') == '1'
+        status = request.POST.get('status')
         funcao = request.POST.get('funcao')
 
         colaborador = Colaborador(
@@ -49,7 +58,7 @@ def editar_colaborador(request, id):
         colaborador.nome = request.POST.get('nome')
         colaborador.email = request.POST.get('email')
         colaborador.telefone = request.POST.get('telefone')
-        colaborador.status = request.POST.get('status') == '1'
+        colaborador.status = request.POST.get('status')
         colaborador.funcao = request.POST.get('funcao')
 
         colaborador.save() 
@@ -99,3 +108,17 @@ def deletar_equipamento(request, id):
     equipamento = get_object_or_404(Equipamento, id=id)
     equipamento.delete()
     return redirect('criar_equipamento')
+
+
+def editar_equip_status(request, id):
+    equipamento = get_object_or_404(Equipamento, id=id)
+    if request.method == 'POST':
+        equipamento.status = request.POST.get('status')
+        return redirect('criar_equipamento')
+    
+
+def criar_emprestimo(request):
+    emprestimo.nome = request.POST.get('nome')
+    emprestimo.nome = request.POST.get('email')
+    emprestimo.status = request.POST.get('status')
+        

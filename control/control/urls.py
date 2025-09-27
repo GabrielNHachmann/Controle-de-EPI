@@ -23,13 +23,17 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('colaboradores/', views.colaboradores, name='colaboradores'),
     path('equipamentos/', views.equipamentos, name='equipamentos'),
-    
+    path('relatorio/', views.relatorio, name='relatorio'),
+    path('emprestimo/', views.emprestimo, name='emprestimo'),
+
     #crud
     path('criar_colaborador/', views.criar_colaborador, name='criar_colaborador'),
     path('deletar_colaborador/<int:id>', views.deletar_colaborador, name='deletar_colaborador'),
     path('deletar_equipamento/<int:id>', views.deletar_equipamento, name='deletar_equipamento'),
     path('editar_colaborador/<int:id>', views.editar_colaborador, name='editar_colaborador'),
     path('criar_equipamento/', views.criar_equipamento, name='criar_equipamento'),
-    path('equipamentos/<int:id>/editar/', views.editar_equipamento, name='editar_equipamento'),
+    path('editar_equipamento/<int:id>', views.editar_equipamento, name='editar_equipamento'),
     path('equipamentos/<int:id>/deletar/', views.deletar_equipamento, name='deletar_equipamento'),
+    path('editar_equip_status/<int:id>', views.editar_equip_status, name='editar_equip_status'),
+    path('criar_emprestimo/', views.criar_emprestimo, name='criar_emprestimo'),
 ]

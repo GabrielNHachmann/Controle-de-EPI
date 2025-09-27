@@ -1,0 +1,49 @@
+{% include 'app/partials/doctype.html' %}
+<body>
+    <h2> Pesquise um colaborador </h2>
+    <form action="{% url 'criar_colaborador' %}" method="GET" class="mb-3">
+        {% csrf_token %}
+        <input type="search" name="name" placeholder="Pesquisar por nome do colaborador...">
+    </form>
+
+    <h2> Pesquise um equipamento </h2>
+    <form action="{% url 'criar_equipamento' %}" method="GET" class="mb-3">
+        {% csrf_token %}
+        <input type="search" name="name" placeholder="Pesquisar por nome do equipamento...">
+    </form>
+
+    <h3>Relatório de Equipamentos</h3>
+
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Código</th>
+                <th>Estoque</th>
+                <th>Status</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in equipamento %}
+            <tr>
+                <td>{{ i.nome }}</td>
+                    <td>{{ i.tipo }}</td>
+                    <td>{{ i.codigo }}</td>
+                    <td>{{ i.estoque }}</td>
+                    <td>{{ i.status }}</td>
+                <td>
+                    <a href="{% url 'editar_equipamento' i.id %}">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4>Pesquisar quais equipamentos o colaborador pegou</h4>
+    
+
+   
+</body>
+</html>
