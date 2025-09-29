@@ -18,27 +18,25 @@ class Equipamento(models.Model):
     estoque = models.IntegerField()
     status = models.CharField(max_length=100, default='Novo') 
 
-class Emprestimo(models.Model):
-    nome = models.ForeignKey(Colaborador,
-        on_delete=models.SET_NULL, 
-        null=True,                 
-        blank=True,                
-        related_name='colaborador_emprestados'
-    )
-    nome = models.ForeignKey(Equipamento,
-        on_delete=models.SET_NULL, 
-        null=True,                 
-        blank=True,                
-    related_name='equipamentos_emprestados'
-    )
-    status = models.ForeignKey(Equipamento,
-        on_delete=models.SET_NULL, 
-        null=True,                 
-        blank=True,                
-    related_name='status_emprestados'
-    )
 
 def __str__(self):
-        return f"{self.nome} ({self.colaborador.nome if self.colaborador else 'Disponível'})"
+        return self.nome
 
+
+class Emprestimo(models.Model):
+    colaborador = models.ForeignKey(
+        Colaborador,
+        on_delete=models.CASCADE # Outras opções comuns: models.PROTECT, models.SET_NULL
+    )
+
+    equipamento = models.ForeignKey(
+        Equipamento,
+        on_delete=models.CASCADE
+    )
+
+    data_emprestimo = models.DateTimeField(auto_now_add=True)
+    data_devolucao = models.DateTimeField(null=True, blank=True)
+
+def __str__(self):
+        return f"Empréstimo de {self.equipamento.nome} para {self.colaborador.nome}"
         

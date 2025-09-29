@@ -3,7 +3,6 @@ from .models import Equipamento
 from .models import Colaborador
 from .models import Emprestimo
 from .form import EquipamentoForm
-from .form import EmprestimoForm
 
 
 # Create your views here.

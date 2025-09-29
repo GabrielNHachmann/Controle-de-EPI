@@ -1,6 +1,6 @@
 from django import forms
 from app.models import Equipamento
-from app.models import Emprestimo
+
 
 
 class EquipamentoForm(forms.ModelForm):
