@@ -34,7 +34,7 @@ class Emprestimo(models.Model):
         on_delete=models.CASCADE
     )
 
-    data_emprestimo = models.DateTimeField(auto_now_add=True)
+    data_emprestimo = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     data_devolucao = models.DateTimeField(null=True, blank=True)
 
 def __str__(self):

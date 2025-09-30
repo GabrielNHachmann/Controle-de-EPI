@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .models import Equipamento
 from .models import Colaborador
 from .models import Emprestimo
@@ -117,7 +117,20 @@ def editar_equip_status(request, id):
     
 
 def criar_emprestimo(request):
-    emprestimo.nome = request.POST.get('nome')
-    emprestimo.nome = request.POST.get('email')
-    emprestimo.status = request.POST.get('status')
+    if request.method == 'POST':
+        nome_colaborador = request.POST.get('nome_do_colaborador_input') # Nome enviado pelo formulário
+        nome_equipamento = request.POST.get('nome_do_equipamento_input')
+        data_devolucao = request.POST.get('data_devolucao')
         
+            # 1. Busca o objeto Colaborador no banco de dados pelo nome
+        colaborador_obj = Colaborador.objects.get(nome=nome_colaborador)
+        equipamento_obj = Equipamento.objects.get(nome=nome_equipamento)
+
+            # 2. Atribui o objeto (instância) à Foreign Key
+        emprestimo = Emprestimo(
+            colaborador=colaborador_obj,
+            equipamento=equipamento_obj,
+            data_devolucao=data_devolucao
+        )
+        emprestimo.save()
+        return redirect('criar_emprestimo')

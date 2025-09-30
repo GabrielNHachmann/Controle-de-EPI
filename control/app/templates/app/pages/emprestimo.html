@@ -2,9 +2,10 @@
 <body>
     <form action="{% url 'criar_emprestimo' %}" method="POST" class="mb-3">
         {% csrf_token %}
-        <input type="search" name="name" placeholder="Pesquisar por nome do colaborador...">
-        <input type="search" name="name" placeholder="Pesquisar por nome do equipamento...">
-        <input type="search" name="name" placeholder="Pesquisar por status...">
+        <input type="search" name="nome_do_colaborador_input" placeholder="Pesquisar Colaborador...">
+        <input type="search" name="nome_do_equipamento_input" placeholder="Pesquisar Equipamento...">
+        <input type="search" name="data_devolucao" placeholder="data_devolucao">
+        <button type="submit">Enviar Dados</button> 
     </form>
-<body>
+</body>
 </html>
