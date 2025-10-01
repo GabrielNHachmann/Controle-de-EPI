@@ -1,11 +1,82 @@
 {% include 'app/partials/doctype.html' %}
 <body>
     <form action="{% url 'criar_emprestimo' %}" method="POST" class="mb-3">
-        {% csrf_token %}
-        <input type="search" name="nome_do_colaborador_input" placeholder="Pesquisar Colaborador...">
-        <input type="search" name="nome_do_equipamento_input" placeholder="Pesquisar Equipamento...">
-        <input type="search" name="data_devolucao" placeholder="data_devolucao">
-        <button type="submit">Enviar Dados</button> 
-    </form>
+              
+              {% csrf_token %}
+              
+              {% for field in form %}
+                <div class="mb-3">
+                  <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                  {{ field }}
+                </div>
+              {% endfor %}
+
+              
+                  <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fas fa-plus me-2"></i> Cadastrar
+                </button>
+            </form>
+
+            <form action="{% url 'show_emprestimos' %}" method="GET" class="mb-3">
+              
+              {% csrf_token %}
+              
+
+              <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fas fa-plus me-2"></i> Mostrar Emprestimos
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="card shadow-lg">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="card-title mb-0">Lista de Emprestimos</h2>
+              <form action="" class="search-form d-flex w-50 ms-auto">
+                <input type="search" class="form-control me-2" name="search" placeholder="Pesquisar por nome...">
+                <button type="submit" class="btn btn-outline-secondary rounded-circle">
+                  <i class="fas fa-search"></i>
+                </button>
+              </form>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Colaborador</th>
+                    <th>Equipamento</th>
+                    <th>Data de Devolução</th>
+                    <th>Data de Empréstimo</th>
+                    <th class="text-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in emprestimo %}
+                  <tr>
+                    <td>{{ i.colaborador }}</td>
+                    <td>{{ i.equipamento }}</td>
+                    <td>{{ i.data_devolucao }}</td>
+                    <td>{{ i.data_emprestimo}}</td>
+                    <td class="text-center">
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

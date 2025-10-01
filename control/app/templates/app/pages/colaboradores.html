@@ -10,10 +10,6 @@
                 Painel de Colaboradores
             </h1>
             <div class="flex items-center space-x-4 w-full md:w-auto">
-                <form action="" method="GET" class="relative flex items-center flex-grow">
-                    <input type="search" name="search" placeholder="Pesquisar por nome..." class="pl-10 pr-4 py-2 rounded-full w-full text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-md">
-                    <span class="absolute left-3 text-gray-400"><i class="fas fa-search"></i></span>
-                </form>
                 <button onclick="openModal('create-modal')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg transition transform hover:scale-105">
                     <i class="fas fa-plus mr-2"></i> Adicionar
                 </button>
@@ -112,7 +108,6 @@
                 </div>
             </div>
             {% empty %}
-            <p class="text-center col-span-full text-gray-500 dark:text-gray-400">Nenhum colaborador encontrado.</p>
             {% endfor %}
         </div>
     </div>

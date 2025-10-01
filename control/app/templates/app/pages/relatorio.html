@@ -1,49 +1,103 @@
 {% include 'app/partials/doctype.html' %}
 <body>
-    <h2> Pesquise um colaborador </h2>
     <form action="{% url 'criar_colaborador' %}" method="GET" class="mb-3">
         {% csrf_token %}
-        <input type="search" name="name" placeholder="Pesquisar por nome do colaborador...">
+        <button type="submit"> Mostrar Colaboradores</button>
     </form>
 
-    <h2> Pesquise um equipamento </h2>
-    <form action="{% url 'criar_equipamento' %}" method="GET" class="mb-3">
+    <form action="{% url 'show_emprestimos' %}" method="GET" class="mb-3">
         {% csrf_token %}
-        <input type="search" name="name" placeholder="Pesquisar por nome do equipamento...">
+        <button type="submit"> Mostrar Emprestimos</button>
     </form>
+<form action="{% url 'show_equipamento' %}" method="GET" class="mb-3">
+              
+              {% csrf_token %}
+              
 
-    <h3>Relatório de Equipamentos</h3>
+              <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fas fa-plus me-2"></i> Mostrar equipamentos
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <table class="table table-hover mb-0">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Tipo</th>
-                <th>Código</th>
-                <th>Estoque</th>
-                <th>Status</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for i in equipamento %}
-            <tr>
-                <td>{{ i.nome }}</td>
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="card shadow-lg">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="card-title mb-0">Lista de Equipamentos</h2>
+              <form action="" class="search-form d-flex w-50 ms-auto">
+                <input type="search" class="form-control me-2" name="search" placeholder="Pesquisar por nome...">
+                <button type="submit" class="btn btn-outline-secondary rounded-circle">
+                  <i class="fas fa-search"></i>
+                </button>
+              </form>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Código</th>
+                    <th>Estoque</th>
+                    <th>Status</th>
+                    <th class="text-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in equipamentos %}
+                  <tr>
+                    <td>{{ i.nome }}</td>
                     <td>{{ i.tipo }}</td>
                     <td>{{ i.codigo }}</td>
                     <td>{{ i.estoque }}</td>
                     <td>{{ i.status }}</td>
-                <td>
-                    <a href="{% url 'editar_equipamento' i.id %}">Editar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    <td class="text-center">
+                      <a href="{% url 'editar_equipamento' i.id %}" class="btn btn-warning btn-sm me-1">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDelete{{ i.id }}">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <div class="modal fade" id="confirmDelete{{ i.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Remover Equipamento</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                          <p class="lead">Tem certeza que deseja remover <strong>{{ i.nome }}</strong>?</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                          <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                          <!-- ESTA URL É ESSENCIAL PARA A EXCLUSÃO DO ITEM. NÃO ALTERE. -->
+                          <a href="{% url 'deletar_equipamento' i.id %}" class="btn btn-danger rounded-pill">Remover</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    <h4>Pesquisar quais equipamentos o colaborador pegou</h4>
-    
 
-   
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 </body>
 </html>

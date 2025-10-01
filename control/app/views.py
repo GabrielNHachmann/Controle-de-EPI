@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from .models import Equipamento
-from .models import Colaborador
-from .models import Emprestimo
-from .form import EquipamentoForm
+from .models import Equipamento, Colaborador, Emprestimo
+from .form import EquipamentoForm, EmprestimoForm
 
 
 # Create your views here.
@@ -114,23 +112,32 @@ def editar_equip_status(request, id):
     if request.method == 'POST':
         equipamento.status = request.POST.get('status')
         return redirect('criar_equipamento')
-    
+
 
 def criar_emprestimo(request):
     if request.method == 'POST':
-        nome_colaborador = request.POST.get('nome_do_colaborador_input') # Nome enviado pelo formulário
-        nome_equipamento = request.POST.get('nome_do_equipamento_input')
-        data_devolucao = request.POST.get('data_devolucao')
+        form = EmprestimoForm(request.POST) 
         
-            # 1. Busca o objeto Colaborador no banco de dados pelo nome
-        colaborador_obj = Colaborador.objects.get(nome=nome_colaborador)
-        equipamento_obj = Equipamento.objects.get(nome=nome_equipamento)
+        if form.is_valid():
+            form.save() 
+            
+            return redirect('criar_emprestimo')
+    
+    else:
+        form = EmprestimoForm()
 
-            # 2. Atribui o objeto (instância) à Foreign Key
-        emprestimo = Emprestimo(
-            colaborador=colaborador_obj,
-            equipamento=equipamento_obj,
-            data_devolucao=data_devolucao
-        )
-        emprestimo.save()
-        return redirect('criar_emprestimo')
+    return render(request, 'app/pages/emprestimo.html', {
+        'form': form,
+        'emprestimo': emprestimo
+    })
+
+def show_equipamento(request):
+    if request.method == 'GET':
+        equipamentos = Equipamento.objects.all()
+        return render(request, 'app/pages/relatorio.html', {'equipamentos': equipamentos})
+    
+def show_emprestimos(request):
+    if request.method == 'GET':
+        emprestimo = Emprestimo.objects.all()
+        return render(request, 'app/pages/emprestimo.html', {'emprestimo': emprestimo})
+    
